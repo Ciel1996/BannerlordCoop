@@ -17,6 +17,9 @@ namespace CoopTestMod
         MissionNetworkBehavior networkBehavior;
         private bool subModuleLoaded = false;
         private bool battleLoaded = false;
+
+        private DebugUI debugUI = new DebugUI();
+
         public override void OnBeforeMissionBehaviorInitialize(Mission mission)
         {
             // add the network behavior
@@ -38,7 +41,7 @@ namespace CoopTestMod
             // NOTE
             // ALL THE CODE BELOW IS FOR DEBUGGING AND AUTO LOADING A SAVE
             //
-
+            debugUI.Update();
 
             if (!battleLoaded && Mission.Current != null && Mission.Current.IsLoadingFinished)
             {

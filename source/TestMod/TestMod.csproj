@@ -258,6 +258,7 @@
     <Compile Include="BoardGamePlayerInputPatches.cs" />
     <Compile Include="ClientAgentManager.cs" />
     <Compile Include="CustomSandboxGame.cs" />
+    <Compile Include="DebugUI.cs" />
     <Compile Include="IOCreateMissile.cs" />
     <Compile Include="MissionNetworkBehavior.cs" />
     <Compile Include="MissionTaskManager.cs" />

@@ -14,7 +14,6 @@ namespace MissionsShared
         [ProtoMember(2)]
         public string agentID { get; set; }
 
-
         [ProtoMember(3)]
         public bool isDismount { get; set; }
     }

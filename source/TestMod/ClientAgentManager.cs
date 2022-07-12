@@ -12,7 +12,9 @@ namespace CoopTestMod
         private ConcurrentDictionary<string, int> agentIdToIndexMap = new ConcurrentDictionary<string, int>();
         private ConcurrentDictionary<int, string> agentIndexToNetworkIdMap = new ConcurrentDictionary<int, string>();
         private ConcurrentDictionary<int, NetworkAgent> indexToNetworkAgent = new ConcurrentDictionary<int, NetworkAgent>();
+
         [MethodImpl(MethodImplOptions.Synchronized)]
+
         public static ClientAgentManager Instance()
         {
             if (instance == null)
@@ -69,6 +71,11 @@ namespace CoopTestMod
                 return false;
             }
             return indexToNetworkAgent[index].IsHostSyncAgent;
+        }
+
+        internal ConcurrentDictionary<string, int> GetAgentsList()
+        {
+            return agentIdToIndexMap;
         }
 
         public void RemoveAgent(string agentIndex)
