@@ -30,8 +30,8 @@ namespace CoopTestMod
     public class MissionNetworkBehavior : MissionBehavior
     {
         // Mission Behavior type, required by MissionBehavior
-        public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;       
-        
+        public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
+
         // LiteNetLib listener
         private EventBasedNetListener listener;
         // LiteNetLib Client
@@ -152,6 +152,34 @@ namespace CoopTestMod
 
 
                     }
+                    else if (messageType == MessageType.AgentMount)
+                    {
+                        byte[] serializedLocation = new byte[dataReader.RawDataSize - dataReader.Position];
+                        Buffer.BlockCopy(dataReader.RawData, dataReader.Position, serializedLocation, 0, dataReader.RawDataSize - dataReader.Position);
+                        AgentMountEvent message;
+                        MemoryStream stream = new MemoryStream(serializedLocation);
+                        message = Serializer.DeserializeWithLengthPrefix<AgentMountEvent>(stream, PrefixStyle.Fixed32BigEndian);
+
+                        MissionTaskManager.Instance().AddTask((message.agentID, message.mountAgentID, message.isDismount), new Action<object>((object obj) =>
+                        {
+                            (string, string, bool) d = ((string, string, bool))obj;
+
+                            Agent agent = Mission.Current.FindAgentWithIndex(ClientAgentManager.Instance().GetIndexFromId(d.Item1));
+                            Agent mountAgent = Mission.Current.FindAgentWithIndex(ClientAgentManager.Instance().GetIndexFromId(d.Item2));
+
+                            if (d.Item3)
+                            {
+                                agent.GetType().GetMethod("SetMountAgent", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(agent, new object[] { null });
+                                return;
+                            }
+
+
+                            agent.GetType().GetMethod("SetMountAgent", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(agent, new object[] { mountAgent });
+
+
+                        }));
+
+                    }
 
                     else if (messageType == MessageType.BoardGameChallenge)
                     {
@@ -171,7 +199,7 @@ namespace CoopTestMod
                             if (d.Item1)
                             {
                                 InformationManager.ShowInquiry(new InquiryData("Board Game Challenge", string.Empty, true, true, "Accept", "Pussy out",
-                                    new Action(() => { AgentInteractionPatch.AcceptGameRequest(d.Item3, d.Item4 ); }), new Action(() => { })));
+                                    new Action(() => { AgentInteractionPatch.AcceptGameRequest(d.Item3, d.Item4); }), new Action(() => { })));
                             }
                             else if (d.Item2)
                             {
@@ -196,7 +224,7 @@ namespace CoopTestMod
                         BoardGameMoveEvent message;
                         MemoryStream stream = new MemoryStream(serializedLocation);
                         message = Serializer.DeserializeWithLengthPrefix<BoardGameMoveEvent>(stream, PrefixStyle.Fixed32BigEndian);
-                        
+
                         MissionTaskManager.Instance().AddTask((message.toIndex, message.fromIndex), new Action<object>((object obj) =>
                         {
                             (int, int) d = ((int, int))obj;
@@ -280,7 +308,7 @@ namespace CoopTestMod
                             }
 
                         }));
-                    } else if(messageType == MessageType.BoardGameForfeit)
+                    } else if (messageType == MessageType.BoardGameForfeit)
                     {
                         var boardGameLogic = Mission.Current.GetMissionBehavior<MissionBoardGameLogic>();
                         boardGameLogic.AIForfeitGame();
@@ -470,7 +498,7 @@ namespace CoopTestMod
                 return false;
             }
         }
-        
+
         [HarmonyPatch(typeof(MissionBoardGameLogic), "StartConversationWithOpponentAfterGameEnd")]
         public class SetGameOverConversationPatch
         {
@@ -492,7 +520,7 @@ namespace CoopTestMod
                     return;
 
                 NetDataWriter writer = new NetDataWriter();
-                writer.Put((uint) MessageType.BoardGameForfeit);
+                writer.Put((uint)MessageType.BoardGameForfeit);
                 writer.Put(otherAgentId);
 
                 client.SendToAll(writer, DeliveryMethod.ReliableUnordered);
@@ -518,31 +546,77 @@ namespace CoopTestMod
         }
 
         // patch for the agent spawn; deconflict network spawn from local spawn
-        [HarmonyPatch(typeof(Mission), "SpawnAgent")]
+        [HarmonyPatch(typeof(Mission), "BuildAgent")]
         public class CampaignAgentSpawnedPatch
         {
 
 
-            public static void Postfix(AgentBuildData agentBuildData, bool spawnFromAgentVisuals, int formationTroopCount, ref Agent __result)
+            public static void Postfix(Agent agent, AgentBuildData agentBuildData)
             {
                 // if the player isn't in a team, continue
                 if (Mission.Current == null || Mission.Current.PlayerTeam == null) return;
                 try
                 {
                     // if the player isn't in our team, we don't care, spawn them as usual
-                    if (__result.Team != Mission.Current.PlayerTeam)
+                    if (agent.Team != Mission.Current.PlayerTeam)
                     {
-                        return;
+                        // if agent is a Monster, check Rider instead
+                        if (agent.RiderAgent != null)
+                        {
+                            // Fix nested
+                            if (agent.RiderAgent.Team != Mission.Current.PlayerTeam)
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+                        
                     }
                 }
                 catch { }
                 // if they are in our team, pass them to the server to generate an ID for them and return them back to us.
                 NetDataWriter writer = new NetDataWriter();
                 writer.Put((uint)MessageType.AddAgent);
-                writer.Put(__result.Index);
+                writer.Put(agent.Index);
                 client.SendToAll(writer, DeliveryMethod.ReliableOrdered);
-                InformationManager.DisplayMessage(new InformationMessage("Created Agent: " + __result.Name + " which is under my command? " + (__result.Team == Mission.Current.PlayerTeam)));
+                InformationManager.DisplayMessage(new InformationMessage("Created Agent: " + agent.Name + " which is under my command? " + (agent.Team == Mission.Current.PlayerTeam)));
 
+            }
+        }
+
+        [HarmonyPatch(typeof(Agent), "Mount")]
+        public class AgentMountPatch
+        {
+            public static void Postfix(Agent mountAgent)
+            {
+
+                AgentMountEvent agentMountEvent = new AgentMountEvent();
+
+                if (Mission.Current.MainAgent.EventControlFlags == Agent.EventControlFlag.Mount)
+                {
+                    agentMountEvent.isDismount = false;
+                }
+                else if(Mission.Current.MainAgent.EventControlFlags == Agent.EventControlFlag.Dismount)
+                {
+                    agentMountEvent.isDismount = true;
+                }
+
+                agentMountEvent.mountAgentID = ClientAgentManager.Instance().GetIdFromIndex(mountAgent.Index);
+                agentMountEvent.agentID = ClientAgentManager.Instance().GetIdFromIndex(Mission.Current.MainAgent.Index);
+                var netDataWriter = new NetDataWriter();
+                netDataWriter.Put((uint)MessageType.AgentMount);
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Serializer.SerializeWithLengthPrefix<AgentMountEvent>(memoryStream, agentMountEvent, PrefixStyle.Fixed32BigEndian);
+                    netDataWriter.Put(memoryStream.ToArray());
+                }
+
+
+                client.SendToAll(netDataWriter, DeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -574,10 +648,10 @@ namespace CoopTestMod
             AgentBuildData agentBuildData = new AgentBuildData(character);
             agentBuildData.BodyProperties(character.GetBodyPropertiesMax());
             Mission mission = Mission.Current;
-            agentBuildData = agentBuildData.Team(Mission.Current.PlayerAllyTeam).InitialPosition(frame.origin);
+            agentBuildData = agentBuildData.Team(Mission.Current.PlayerEnemyTeam).InitialPosition(frame.origin);
             Vec2 vec = frame.rotation.f.AsVec2;
             vec = vec.Normalized();
-            Agent agent = mission.SpawnAgent(agentBuildData.InitialDirection(vec).NoHorses(true).Equipment(character.FirstBattleEquipment).TroopOrigin(new SimpleAgentOrigin(character, -1, null, default(UniqueTroopDescriptor))), false, 0);
+            Agent agent = mission.SpawnAgent(agentBuildData.InitialDirection(vec).NoHorses(false).Equipment(character.FirstBattleEquipment).TroopOrigin(new SimpleAgentOrigin(character, -1, null, default(UniqueTroopDescriptor))), false, 0);
             agent.FadeIn();
             agent.Controller = Agent.ControllerType.None;
             return agent;
@@ -592,7 +666,7 @@ namespace CoopTestMod
             agentBuildData = agentBuildData.Team(isMain ? Mission.Current.PlayerTeam : Mission.Current.PlayerEnemyTeam).InitialPosition(frame.origin);
             Vec2 vec = frame.rotation.f.AsVec2;
             vec = vec.Normalized();
-            Agent agent = mission.SpawnAgent(agentBuildData.InitialDirection(vec).NoHorses(true).Equipment(character.FirstBattleEquipment).TroopOrigin(new SimpleAgentOrigin(character, -1, null, default(UniqueTroopDescriptor))), false, 0);                             //this spawns an archer
+            Agent agent = mission.SpawnAgent(agentBuildData.InitialDirection(vec).NoHorses(false).Equipment(character.FirstBattleEquipment).TroopOrigin(new SimpleAgentOrigin(character, -1, null, default(UniqueTroopDescriptor))), false, 0);                             //this spawns an archer
             //Agent agent = mission.SpawnAgent(agentBuildData2.InitialDirection(vec).NoHorses(true).Equipment(CharacterObject.Find("conspiracy_guardian").Equipment).TroopOrigin(new SimpleAgentOrigin(character, -1, null, default(UniqueTroopDescriptor))), false, 0);    //this spawns a spearman
             agent.FadeIn();
             if (isMain)
@@ -944,10 +1018,12 @@ namespace CoopTestMod
                     tickInfo.LookDirectionX = lookDirection.X;
                     tickInfo.LookDirectionY = lookDirection.Y;
                     tickInfo.LookDirectionZ = lookDirection.Z;
-                    tickInfo.crouchMode = Mission.Current.MainAgent.CrouchMode;
-                    tickInfo.MainHandIndex = (int)Mission.Current.MainAgent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
-                    tickInfo.OffHandIndex = (int)Mission.Current.MainAgent.GetWieldedItemIndex(Agent.HandIndex.OffHand);
-
+                    tickInfo.crouchMode = agent.Agent.CrouchMode;
+                    if (!agent.Agent.IsMount)
+                    {
+                        tickInfo.MainHandIndex = (int)agent.Agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
+                        tickInfo.OffHandIndex = (int)agent.Agent.GetWieldedItemIndex(Agent.HandIndex.OffHand);
+                    }
                 }
                 catch { }
             }

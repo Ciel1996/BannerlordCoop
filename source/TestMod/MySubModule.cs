@@ -5,10 +5,11 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.SaveSystem.Load;
 using System.Reflection;
 using SandBox.BoardGames.MissionLogics;
+using System.Linq;
 
 namespace CoopTestMod
 {
-    
+
 
     public class MySubModule : MBSubModuleBase
     {
@@ -43,7 +44,7 @@ namespace CoopTestMod
             {
                 // again theres gotta be a better way to check if missions finish loading? A custom mission maybe in the future
                 battleLoaded = true;
-                //networkBehavior.StartArenaFight();
+                networkBehavior.StartArenaFight();
             }
 
             if (!subModuleLoaded && TaleWorlds.MountAndBlade.Module.CurrentModule.LoadingFinished)
@@ -79,11 +80,25 @@ namespace CoopTestMod
                 }
 
             }
-            if (Input.IsKeyReleased(InputKey.Numpad7)) 
+            if (Input.IsKeyReleased(InputKey.Numpad7))
             {
-                MissionBoardGameLogic boardGameLogic = Mission.Current.GetMissionBehavior<MissionBoardGameLogic>();
-
-                InformationManager.DisplayMessage(new InformationMessage(boardGameLogic.OpposingAgent.Index.ToString()));
+                foreach (Agent agent in Mission.Current.Agents)
+                {
+                    if (agent.IsMount)
+                    {
+                        Mission.Current.MainAgent.Mount(agent);
+                    }
+                }
+            }
+            if (Input.IsKeyReleased(InputKey.Numpad8))
+            {
+                foreach (Agent agent in Mission.Current.Agents)
+                {
+                    if (!agent.IsMount && agent != Mission.Current.MainAgent)
+                    {
+                        Mission.Current.MainAgent.GetType().GetMethod("SetMountAgent", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(agent, new object[] { Mission.Current.Agents.FirstOrDefault(c => c.IsMount) });
+                    }
+                }
             }
         }
     }

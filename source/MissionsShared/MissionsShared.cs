@@ -16,6 +16,7 @@ namespace MissionsShared
         BoardGameChallenge,
         BoardGame,
         BoardGameForfeit,
-        PawnCapture
+        PawnCapture,
+        AgentMount
     }
 }
