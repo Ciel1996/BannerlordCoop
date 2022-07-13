@@ -259,6 +259,22 @@ namespace MissionsServer
                     var (peerId, _) = ServerAgentManager.Instance().GetClientInfo(agentToSendId);
                     server.GetPeerById(peerId)?.Send(writer, DeliveryMethod.ReliableOrdered);
                 }
+                else if (messageType == MessageType.MissileFire)
+                {
+                    NetDataWriter writer = new NetDataWriter();
+                    writer.Put((uint)MessageType.MissileFire);
+                    byte[] missileFire = dataReader.GetRemainingBytes();
+                    writer.Put(missileFire);
+                    string location = clientToLocation[fromPeer.Id];
+
+                    MemoryStream stream = new MemoryStream(missileFire);
+                    MissileFireEvent missileFireEvent = Serializer.DeserializeWithLengthPrefix<MissileFireEvent>(stream, PrefixStyle.Fixed32BigEndian);
+
+                    foreach (int clientId in locationToClients[location].Keys.Where(c => c != fromPeer.Id))
+                    {
+                        server.GetPeerById(clientId).Send(writer, DeliveryMethod.ReliableSequenced);
+                    }
+                }
                 else if (messageType == MessageType.AgentMount)
                 {
                     NetDataWriter writer = new NetDataWriter();

@@ -152,6 +152,40 @@ namespace CoopTestMod
 
 
                     }
+
+                    else if (messageType == MessageType.MissileFire)
+                    {
+                        byte[] serializedLocation = new byte[dataReader.RawDataSize - dataReader.Position];
+                        Buffer.BlockCopy(dataReader.RawData, dataReader.Position, serializedLocation, 0, dataReader.RawDataSize - dataReader.Position);
+                        MissileFireEvent message;
+                        MemoryStream stream = new MemoryStream(serializedLocation);
+                        message = Serializer.DeserializeWithLengthPrefix<MissileFireEvent>(stream, PrefixStyle.Fixed32BigEndian);
+
+
+                        MissionTaskManager.Instance().AddTask((message.agentID, message.weaponIndex, message.posX, message.posY, message.posZ, message.dirX, message.dirY, message.dirZ, message.sx,
+                            message.sy, message.sz, message.fx, message.fy, message.fz, message.ux, message.uy, message.uz, message.hasRigidBody, message.baseSpeed, message.speed), new Action<object>((object obj) =>
+                            {
+                                (string, int, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, bool, float, float) d
+                                =
+                                ((string, int, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, bool, float, float))obj;
+
+
+                                Agent shooterAgent = Mission.Current.FindAgentWithIndex(ClientAgentManager.Instance().GetIndexFromId(d.Item1));
+                                Vec3 pos = new Vec3(d.Item3, d.Item4, d.Item5);
+                                Vec3 dir = new Vec3(d.Item6, d.Item7, d.Item8);
+                                Mat3 orientation = new Mat3(new Vec3(d.Item9, d.Item10, d.Item11), new Vec3(d.Item12, d.Item13, d.Item14), new Vec3(d.Item15, d.Item16, d.Item17));
+
+                                Mission.Current.AddCustomMissile(shooterAgent, shooterAgent.WieldedWeapon, pos, dir, orientation, d.Item19, d.Item20, d.Item18, null);
+
+
+                            }));
+
+
+
+
+
+                    }
+
                     else if (messageType == MessageType.AgentMount)
                     {
                         byte[] serializedLocation = new byte[dataReader.RawDataSize - dataReader.Position];
@@ -615,6 +649,57 @@ namespace CoopTestMod
                     netDataWriter.Put(memoryStream.ToArray());
                 }
 
+
+                client.SendToAll(netDataWriter, DeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        [HarmonyPatch(typeof(Mission), "AddMissileAux")]
+        public class AddCustomMissilePatch
+        {
+            public static void Postfix(int forcedMissileIndex, bool isPrediction, Agent shooterAgent, in WeaponData weaponData, WeaponStatsData[] weaponStatsData, float damageBonus, ref Vec3 position, ref Vec3 direction, ref Mat3 orientation, 
+                float baseSpeed, float speed, bool addRigidBody, GameEntity gameEntityToIgnore, bool isPrimaryWeaponShot)
+            {
+                if (shooterAgent.Team != Mission.Current.PlayerTeam) return;
+
+                MissileFireEvent missileFireEvent = new MissileFireEvent();
+
+                missileFireEvent.agentID = ClientAgentManager.Instance().GetIdFromIndex(shooterAgent.Index);
+
+                missileFireEvent.posX = position.X;
+                missileFireEvent.posY = position.Y;
+                missileFireEvent.posZ = position.Z;
+
+                missileFireEvent.dirX = direction.X;
+                missileFireEvent.dirY = direction.Y;
+                missileFireEvent.dirZ = direction.Z;
+
+                missileFireEvent.fx = orientation.f.X;
+                missileFireEvent.fy = orientation.f.Y;
+                missileFireEvent.fz = orientation.f.Z;
+
+                missileFireEvent.sx = orientation.s.X;
+                missileFireEvent.sy = orientation.s.Y;
+                missileFireEvent.sz = orientation.s.Z;
+
+                missileFireEvent.ux = orientation.u.X;
+                missileFireEvent.uy = orientation.u.Y;
+                missileFireEvent.uz = orientation.u.Z;
+
+                missileFireEvent.hasRigidBody = addRigidBody;
+                missileFireEvent.baseSpeed = baseSpeed;
+                missileFireEvent.speed = speed;
+
+                missileFireEvent.weaponIndex = shooterAgent.WieldedWeapon.CurrentUsageIndex;
+
+                var netDataWriter = new NetDataWriter();
+                netDataWriter.Put((uint)MessageType.MissileFire);
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Serializer.SerializeWithLengthPrefix<MissileFireEvent>(memoryStream, missileFireEvent, PrefixStyle.Fixed32BigEndian);
+                    netDataWriter.Put(memoryStream.ToArray());
+                }
 
                 client.SendToAll(netDataWriter, DeliveryMethod.ReliableOrdered);
             }

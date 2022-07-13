@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BoardGameChallenge.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoardGameMoveEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FromServerClientsAgents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MissileFireEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MissionsShared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FromClientTickMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FromServerTickMessage.cs" />
