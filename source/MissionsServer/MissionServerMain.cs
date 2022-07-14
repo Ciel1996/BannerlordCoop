@@ -194,6 +194,19 @@ namespace MissionsServer
                    Console.WriteLine(fromPeer.Id + " has added new agent with ID: " + id);
                    
                 }
+                else if (messageType == MessageType.AddMount)
+                {
+                    int senderClientId = fromPeer.Id;
+                    int agentIndex = dataReader.GetInt();
+                    string id = ServerAgentManager.Instance().GetAgentID(senderClientId, agentIndex);
+                    NetDataWriter writer = new NetDataWriter();
+                    writer.Put((uint)MessageType.AddMount);
+                    writer.Put(agentIndex);
+                    writer.Put(id);
+                    server.GetPeerById(fromPeer.Id).Send(writer, DeliveryMethod.Unreliable);
+                    Console.WriteLine(fromPeer.Id + " has added new mount with ID: " + id);
+
+                }
                 else if (messageType == MessageType.BoardGame)
                 {
                     string location = clientToLocation[fromPeer.Id];

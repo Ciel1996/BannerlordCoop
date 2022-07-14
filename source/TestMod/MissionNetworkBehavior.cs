@@ -403,12 +403,28 @@ namespace CoopTestMod
                                 else
                                 {
                                     InformationManager.DisplayMessage(new InformationMessage("No agent was found; a new agent will be queued to spawn for: " + tickInfo.Id));
-                                    MissionTaskManager.Instance().AddTask((payload.ClientId, tickInfo.Id), new Action<object>((object obj) =>
+                                    MissionTaskManager.Instance().AddTask((payload.ClientId, tickInfo.Id, tickInfo.isMount), new Action<object>((object obj) =>
                                     {
-                                        (int, string) agentState = ((int, string))obj;
+                                        (int, string, bool) agentState = ((int, string, bool))obj;
                                         GameEntity gameEntity = Mission.Current.Scene.FindEntityWithTag("spawnpoint_player");
                                         if (gameEntity == null) return;
-                                        Agent agent = SpawnAgent(CharacterObject.PlayerCharacter, gameEntity.GetFrame());
+                                        Agent agent;
+                                        if (agentState.Item3)
+                                        {
+
+
+                                            agent = Mission.Current.SpawnMonster(new ItemRosterElement(CharacterObject.PlayerCharacter.Equipment.Horse, 1),
+                                            new ItemRosterElement(CharacterObject.PlayerCharacter.Equipment[EquipmentIndex.HorseHarness], 1), gameEntity.GetFrame().origin,
+                                            gameEntity.GetFrame().rotation.f.AsVec2.Normalized());
+
+                                        }
+                                        else 
+                                        {
+
+                                            agent = SpawnAgent(CharacterObject.PlayerCharacter, gameEntity.GetFrame());
+
+                                        }
+
                                         NetworkAgent networkAgent = new NetworkAgent(agentState.Item1, agent.Index, agentState.Item2, agent, false);
                                         ClientAgentManager.Instance().AddNetworkAgent(networkAgent);
                                         //uint id = agent.Character.Id.SubId;
@@ -895,20 +911,22 @@ namespace CoopTestMod
                     return;
                 }
 
-                // Check if there is a change on the right hand
-                if ((EquipmentIndex)info.MainHandIndex != agent.GetWieldedItemIndex(Agent.HandIndex.MainHand))
+                if (!agent.IsMount)
                 {
-                    // set the weapon to whatever index the server passed
-                    agent.SetWieldedItemIndexAsClient(Agent.HandIndex.MainHand, (EquipmentIndex)info.MainHandIndex, false, false, agent.WieldedWeapon.CurrentUsageIndex);
-                }
-                // check if there is a change on the left hand
+                    // Check if there is a change on the right hand
+                    if ((EquipmentIndex)info.MainHandIndex != agent.GetWieldedItemIndex(Agent.HandIndex.MainHand))
+                    {
+                        // set the weapon to whatever index the server passed
+                        agent.SetWieldedItemIndexAsClient(Agent.HandIndex.MainHand, (EquipmentIndex)info.MainHandIndex, false, false, agent.WieldedWeapon.CurrentUsageIndex);
+                    }
+                    // check if there is a change on the left hand
 
-                if ((EquipmentIndex)info.OffHandIndex != agent.GetWieldedItemIndex(Agent.HandIndex.OffHand))
-                {
-                    // set the index to the weapon wielded
-                    agent.SetWieldedItemIndexAsClient(Agent.HandIndex.OffHand, (EquipmentIndex)info.OffHandIndex, false, false, agent.WieldedOffhandWeapon.CurrentUsageIndex);
+                    if ((EquipmentIndex)info.OffHandIndex != agent.GetWieldedItemIndex(Agent.HandIndex.OffHand))
+                    {
+                        // set the index to the weapon wielded
+                        agent.SetWieldedItemIndexAsClient(Agent.HandIndex.OffHand, (EquipmentIndex)info.OffHandIndex, false, false, agent.WieldedOffhandWeapon.CurrentUsageIndex);
+                    }
                 }
-
 
                 // Check if there is a melee; this breaks the game if we don't do it.
                 if ((Agent.ActionCodeType)info.Action1CodeType != Agent.ActionCodeType.BlockedMelee)
@@ -1109,6 +1127,7 @@ namespace CoopTestMod
                         tickInfo.MainHandIndex = (int)agent.Agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
                         tickInfo.OffHandIndex = (int)agent.Agent.GetWieldedItemIndex(Agent.HandIndex.OffHand);
                     }
+                    tickInfo.isMount = agent.Agent.IsMount;
                 }
                 catch { }
             }

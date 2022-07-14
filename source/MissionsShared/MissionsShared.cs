@@ -18,6 +18,7 @@ namespace MissionsShared
         BoardGameForfeit,
         PawnCapture,
         AgentMount,
-        MissileFire
+        MissileFire,
+        AddMount
     }
 }

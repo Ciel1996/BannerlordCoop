@@ -89,9 +89,8 @@ namespace MissionsShared
         public float MountPositionY { get; set; }
         [ProtoMember(37)]
         public float MountPositionZ { get; set; }
-
-
-
+        [ProtoMember(38)]
+        public bool isMount { get; set; }
 
 
         public PlayerTickInfo() { }
