@@ -49,8 +49,6 @@ namespace CoopTestMod
         // Atomic boolean to indicate if the mission running. This is to avoid using Mission.Current
         private static volatile bool isInMission = false;
 
-
-
         public MissionNetworkBehavior()
         {
             // start harmony patch
@@ -194,12 +192,25 @@ namespace CoopTestMod
                         MemoryStream stream = new MemoryStream(serializedLocation);
                         message = Serializer.DeserializeWithLengthPrefix<AgentMountEvent>(stream, PrefixStyle.Fixed32BigEndian);
 
-                        MissionTaskManager.Instance().AddTask((message.agentID, message.mountAgentID, message.isDismount), new Action<object>((object obj) =>
+                        MissionTaskManager.Instance().AddTask((message.agentID, message.mountAgentID, message.isDismount, message.mountAgentIndex), new Action<object>((object obj) =>
                         {
-                            (string, string, bool) d = ((string, string, bool))obj;
+                            (string, string, bool, int) d = ((string, string, bool, int))obj;
 
                             Agent agent = Mission.Current.FindAgentWithIndex(ClientAgentManager.Instance().GetIndexFromId(d.Item1));
-                            Agent mountAgent = Mission.Current.FindAgentWithIndex(ClientAgentManager.Instance().GetIndexFromId(d.Item2));
+                            Agent mountAgent = Mission.Current.FindAgentWithIndex(d.Item4);
+
+                            if (d.Item3)
+                            {
+
+                                if (!ClientAgentManager.Instance().IsNetworkAgent(ClientAgentManager.Instance().GetIndexFromId(d.Item2)))
+                                {
+                                    NetworkAgent networkAgent = new NetworkAgent(myPeerId, d.Item4, d.Item2, mountAgent, true); //Probably needs changes
+                                    ClientAgentManager.Instance().AddNetworkAgent(networkAgent);
+                                }
+                            }
+
+
+                            
 
                             if (d.Item3)
                             {
@@ -342,7 +353,8 @@ namespace CoopTestMod
                             }
 
                         }));
-                    } else if (messageType == MessageType.BoardGameForfeit)
+                    } 
+                    else if (messageType == MessageType.BoardGameForfeit)
                     {
                         var boardGameLogic = Mission.Current.GetMissionBehavior<MissionBoardGameLogic>();
                         boardGameLogic.AIForfeitGame();
@@ -409,21 +421,17 @@ namespace CoopTestMod
                                         GameEntity gameEntity = Mission.Current.Scene.FindEntityWithTag("spawnpoint_player");
                                         if (gameEntity == null) return;
                                         Agent agent;
-                                        if (agentState.Item3)
-                                        {
 
+                                            
+                                            //agent = Mission.Current.SpawnMonster(new ItemRosterElement(CharacterObject.PlayerCharacter.Equipment.Horse, 1),
+                                            //new ItemRosterElement(CharacterObject.PlayerCharacter.Equipment[EquipmentIndex.HorseHarness], 1), gameEntity.GetFrame().origin,
+                                            //gameEntity.GetFrame().rotation.f.AsVec2.Normalized());
 
-                                            agent = Mission.Current.SpawnMonster(new ItemRosterElement(CharacterObject.PlayerCharacter.Equipment.Horse, 1),
-                                            new ItemRosterElement(CharacterObject.PlayerCharacter.Equipment[EquipmentIndex.HorseHarness], 1), gameEntity.GetFrame().origin,
-                                            gameEntity.GetFrame().rotation.f.AsVec2.Normalized());
+                                        
 
-                                        }
-                                        else 
-                                        {
+                                        agent = SpawnAgent(CharacterObject.PlayerCharacter, gameEntity.GetFrame());
 
-                                            agent = SpawnAgent(CharacterObject.PlayerCharacter, gameEntity.GetFrame());
-
-                                        }
+                                        
 
                                         NetworkAgent networkAgent = new NetworkAgent(agentState.Item1, agent.Index, agentState.Item2, agent, false);
                                         ClientAgentManager.Instance().AddNetworkAgent(networkAgent);
@@ -596,43 +604,30 @@ namespace CoopTestMod
         }
 
         // patch for the agent spawn; deconflict network spawn from local spawn
-        [HarmonyPatch(typeof(Mission), "BuildAgent")]
+        [HarmonyPatch(typeof(Mission), "SpawnAgent")]
         public class CampaignAgentSpawnedPatch
         {
 
 
-            public static void Postfix(Agent agent, AgentBuildData agentBuildData)
+            public static void Postfix(AgentBuildData agentBuildData, bool spawnFromAgentVisuals, int formationTroopCount, ref Agent __result)
             {
                 // if the player isn't in a team, continue
                 if (Mission.Current == null || Mission.Current.PlayerTeam == null) return;
                 try
                 {
                     // if the player isn't in our team, we don't care, spawn them as usual
-                    if (agent.Team != Mission.Current.PlayerTeam)
+                    if (__result.Team != Mission.Current.PlayerTeam)
                     {
-                        // if agent is a Monster, check Rider instead
-                        if (agent.RiderAgent != null)
-                        {
-                            // Fix nested
-                            if (agent.RiderAgent.Team != Mission.Current.PlayerTeam)
-                            {
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            return;
-                        }
-                        
+                        return;
                     }
                 }
                 catch { }
                 // if they are in our team, pass them to the server to generate an ID for them and return them back to us.
                 NetDataWriter writer = new NetDataWriter();
                 writer.Put((uint)MessageType.AddAgent);
-                writer.Put(agent.Index);
+                writer.Put(__result.Index);
                 client.SendToAll(writer, DeliveryMethod.ReliableOrdered);
-                InformationManager.DisplayMessage(new InformationMessage("Created Agent: " + agent.Name + " which is under my command? " + (agent.Team == Mission.Current.PlayerTeam)));
+                InformationManager.DisplayMessage(new InformationMessage("Created Agent: " + __result.Name + " which is under my command? " + (__result.Team == Mission.Current.PlayerTeam)));
 
             }
         }
@@ -651,10 +646,11 @@ namespace CoopTestMod
                 }
                 else if(Mission.Current.MainAgent.EventControlFlags == Agent.EventControlFlag.Dismount)
                 {
-                    agentMountEvent.isDismount = true;
+                    agentMountEvent.isDismount = true;    
                 }
 
-                agentMountEvent.mountAgentID = ClientAgentManager.Instance().GetIdFromIndex(mountAgent.Index);
+
+                agentMountEvent.mountAgentIndex = mountAgent.Index;
                 agentMountEvent.agentID = ClientAgentManager.Instance().GetIdFromIndex(Mission.Current.MainAgent.Index);
                 var netDataWriter = new NetDataWriter();
                 netDataWriter.Put((uint)MessageType.AgentMount);

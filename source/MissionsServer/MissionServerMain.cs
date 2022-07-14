@@ -194,18 +194,30 @@ namespace MissionsServer
                    Console.WriteLine(fromPeer.Id + " has added new agent with ID: " + id);
                    
                 }
-                else if (messageType == MessageType.AddMount)
+                else if (messageType == MessageType.AgentMount)
                 {
-                    int senderClientId = fromPeer.Id;
-                    int agentIndex = dataReader.GetInt();
-                    string id = ServerAgentManager.Instance().GetAgentID(senderClientId, agentIndex);
                     NetDataWriter writer = new NetDataWriter();
-                    writer.Put((uint)MessageType.AddMount);
-                    writer.Put(agentIndex);
-                    writer.Put(id);
-                    server.GetPeerById(fromPeer.Id).Send(writer, DeliveryMethod.Unreliable);
-                    Console.WriteLine(fromPeer.Id + " has added new mount with ID: " + id);
+                    writer.Put((uint)MessageType.AgentMount);
+                    byte[] agentMount = dataReader.GetRemainingBytes();
+                    string location = clientToLocation[fromPeer.Id];
 
+                    MemoryStream stream = new MemoryStream(agentMount);
+                    AgentMountEvent agentMountEvent = Serializer.DeserializeWithLengthPrefix<AgentMountEvent>(stream, PrefixStyle.Fixed32BigEndian);
+
+                    Console.Write("AgentID: " + agentMountEvent.agentID + " Mounts MountID: " + agentMountEvent.mountAgentID);
+
+                    agentMountEvent.mountAgentID = ServerAgentManager.Instance().GetAgentID(fromPeer.Id, agentMountEvent.mountAgentIndex);
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        Serializer.SerializeWithLengthPrefix<AgentMountEvent>(memoryStream, agentMountEvent, PrefixStyle.Fixed32BigEndian);
+                        writer.Put(memoryStream.ToArray());
+                    }
+
+                    foreach (int clientId in locationToClients[location].Keys.Where(c => c != fromPeer.Id))
+                    {
+                        server.GetPeerById(clientId).Send(writer, DeliveryMethod.ReliableSequenced);
+                    }
                 }
                 else if (messageType == MessageType.BoardGame)
                 {
@@ -288,24 +300,7 @@ namespace MissionsServer
                         server.GetPeerById(clientId).Send(writer, DeliveryMethod.ReliableSequenced);
                     }
                 }
-                else if (messageType == MessageType.AgentMount)
-                {
-                    NetDataWriter writer = new NetDataWriter();
-                    writer.Put((uint)MessageType.AgentMount);
-                    byte[] agentMount = dataReader.GetRemainingBytes();
-                    writer.Put(agentMount);
-                    string location = clientToLocation[fromPeer.Id];
 
-                    MemoryStream stream = new MemoryStream(agentMount);
-                    AgentMountEvent agentMountEvent = Serializer.DeserializeWithLengthPrefix<AgentMountEvent>(stream, PrefixStyle.Fixed32BigEndian);
-
-                    Console.Write("AgentID: " + agentMountEvent.agentID + " Mounts MountID: " + agentMountEvent.mountAgentID);
-
-                    foreach (int clientId in locationToClients[location].Keys.Where(c => c != fromPeer.Id))
-                    {
-                        server.GetPeerById(clientId).Send(writer, DeliveryMethod.ReliableSequenced);
-                    }
-                }
             };
 
             List<FromServerTickPayload> GeneratePlayerPayload(HashSet<int> clientIds)
