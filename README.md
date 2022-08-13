@@ -63,7 +63,7 @@ The game should now be running a local coop server. Additional players can now j
 1. Either open another instance of Visual Studio or edit your build configuration to build and deploy both the `Coop` and `ClientDebug` projects.
 2. Click on the new `Join Co-op Campaign` button on the main menu in the client instance.
     - This will automatically attempt to join a server hosted at `127.0.0.1:4201`
-        - This is currently hardcoded [NetworkConfiguration.cs](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/blob/development/source/Network/Infrastructure/NetworkConfiguration.cs#L15). If you wish to change the address you can modify it here. We will allow users to change this once we create the UI.
+        - This is currently hardcoded [NetworkConfiguration.cs](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/blob/development/src/Network/Infrastructure/NetworkConfiguration.cs#L15). If you wish to change the address you can modify it here. We will allow users to change this once we create the UI.
 4. The Client should now connectto your local server (Check the server chat log for connection updates)
 5. In `DEBUG` mode, the client will skip to the end of character creation and will be dropped in the training field per the beginning of a campaign. 
     - Eventually we will have the server store save data for each client and this won't be required.

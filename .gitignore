@@ -539,6 +539,6 @@ MigrationBackup/
 deploy/**
 mb2
 mb2/**
-source/.editorconfig
+src/.editorconfig
 # Rider IDE
-source/.idea
+src/.idea
