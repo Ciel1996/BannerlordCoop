@@ -14,8 +14,8 @@ Write-Output "3rdPartyLibs:  ${Libs}"
 $BaseDir        = "${SolutionDir}..\"
 $DeployDir      = "${BaseDir}deploy\"
 $ConfigPath     = "${BaseDir}config.json"
-$TemplateDir    = "${BaseDir}template"
-$UIMovieDir     = "${BaseDir}UIMovies"
+$TemplateDir    = "${BaseDir}src/Coop.Mod/_Ressources/"
+$UIMovieDir     = "${BaseDir}src/Coop.Mod/_Ressources/UIMovies"
 
 # create output directory structure
 $DeployBinDir = "$DeployDir\bin\Win64_Shipping_Client"
@@ -51,7 +51,6 @@ if(Test-Path (${BaseDir} + $config.modsDir))
     Remove-Item ${ModDir} -Recurse -ErrorAction Ignore
     New-Item -Force -ItemType Directory -Path ${ModDir} | Out-Null
     Copy-item -Force -Recurse $DeployDir\* -Destination $ModDir\
-    
 }
 
 # write Movie Prefabs

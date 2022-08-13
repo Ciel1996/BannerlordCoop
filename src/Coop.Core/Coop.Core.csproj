@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="..\packages\PropertyChanged.Fody.3.2.8\build\PropertyChanged.Fody.props" Condition="Exists('..\packages\PropertyChanged.Fody.3.2.8\build\PropertyChanged.Fody.props')" />
     <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -193,11 +193,4 @@
     </ItemGroup>
     
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    
-    <PropertyGroup>
-        <PostBuildEvent>powershell -ExecutionPolicy Unrestricted ^
-            -File "$(SolutionDir)..\deploy.ps1" -SolutionDir "$(SolutionDir)\" ^
-            -TargetDir "$(SolutionDir)Coop\bin\$(Configuration)\\" ^
-            -Libs Coop.dll,CoopFramework.dll,Common.dll,Network.dll,Sync.dll,RemoteAction.dll,0harmony.dll,LiteNetLib.dll,Stateless.dll,RailgunNet.dll,NLog.dll,Mono.Reflection.dll,Extensions.Data.xxHash.dll,DistributedLock.dll,BannerlordSystemTestingFramework.dll,SimpleTCP.dll</PostBuildEvent>
-    </PropertyGroup>
 </Project>
