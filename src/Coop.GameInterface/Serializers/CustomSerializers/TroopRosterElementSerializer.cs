@@ -1,14 +1,10 @@
-﻿using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Common;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Roster;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class TroopRosterElementSerializer : CustomSerializer

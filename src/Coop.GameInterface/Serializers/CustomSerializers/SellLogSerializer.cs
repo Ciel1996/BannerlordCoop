@@ -1,11 +1,11 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Common;
 using TaleWorlds.Core;
 using static TaleWorlds.CampaignSystem.Settlements.Town;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class SellLogSerializer : CustomSerializer

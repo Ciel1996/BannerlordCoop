@@ -1,9 +1,8 @@
 ﻿using HarmonyLib;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 
-namespace Coop.Mod.Patch.MobilePartyPatches
+namespace Coop.GameInterface.Patch.MobilePartyPatches
 {
     [HarmonyPatch()]
     static class DisablePartyDecisionMaking

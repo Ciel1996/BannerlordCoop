@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     internal class PlayerCultureObjectSerializer : CustomSerializer

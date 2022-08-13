@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     // TODO find a way to not use stringId
     [Serializable]

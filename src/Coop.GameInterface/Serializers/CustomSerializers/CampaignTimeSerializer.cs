@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Coop.GameInterface.Extentions;
 using TaleWorlds.CampaignSystem;
-using System.Reflection;
-using Coop.Mod.Extentions;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class CampaignTimeSerializer : ICustomSerializer

@@ -1,14 +1,13 @@
-﻿using Common;
-using SandBox.View.Map;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Common;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class PartyBaseSerializer : CustomSerializerWithGuid
@@ -59,7 +58,7 @@ namespace Coop.Mod.Serializers.Custom
                         break;
                     case "_lastEatingTime":
                         //CampaignTime
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     // References
                     case "<MobileParty>k__BackingField":

@@ -1,10 +1,10 @@
-﻿using Common;
-using System;
+﻿using System;
+using Common;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using static TaleWorlds.CampaignSystem.Hero;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class HeroLastSeenInformationSerializer : ICustomSerializer

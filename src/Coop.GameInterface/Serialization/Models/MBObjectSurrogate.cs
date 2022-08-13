@@ -2,7 +2,7 @@
 using ProtoBuf;
 using TaleWorlds.ObjectSystem;
 
-namespace Coop.Serialization.Models
+namespace Coop.GameInterface.Serialization.Models
 {
     [ProtoContract]
     // ReSharper disable once UnusedType.Global

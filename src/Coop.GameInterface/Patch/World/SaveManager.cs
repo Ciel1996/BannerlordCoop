@@ -1,17 +1,12 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.ObjectSystem;
-using TaleWorlds.PlayerServices;
-using TaleWorlds.SaveSystem.Save;
 
-namespace Coop.Mod.Patch.World
+namespace Coop.GameInterface.Patch.World
 {
     class CoopSaveManager
     {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class MBGUIDSerializer : ICustomSerializer

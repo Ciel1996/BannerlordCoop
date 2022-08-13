@@ -1,14 +1,12 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Coop.GameInterface.Serializers;
-using TaleWorlds.CampaignSystem;
+using Common;
 using TaleWorlds.CampaignSystem.Settlements.Workshops;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class WorkshopSerializer : CustomSerializerWithGuid

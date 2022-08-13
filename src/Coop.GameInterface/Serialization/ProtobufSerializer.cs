@@ -1,8 +1,7 @@
 ﻿using System.IO;
-using Coop.GameInterface.Serialization;
 using ProtoBuf;
 
-namespace Coop.Serialization
+namespace Coop.GameInterface.Serialization
 {
     public class ProtobufSerializer : ISerializer
     {

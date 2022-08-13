@@ -1,6 +1,6 @@
 ﻿using TaleWorlds.CampaignSystem.Election;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     public class KingdomDecisionSerialzer : CustomSerializer
     {

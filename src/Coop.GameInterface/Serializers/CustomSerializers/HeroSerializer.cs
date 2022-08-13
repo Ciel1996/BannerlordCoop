@@ -1,9 +1,8 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
-using Coop.GameInterface.Serializers;
+using Common;
+using Coop.GameInterface.Serializers.PropertyOwnerSerializers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
@@ -11,7 +10,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class HeroSerializer : CustomSerializerWithGuid

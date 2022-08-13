@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Coop.GameInterface.Serializers.PropertyOwnerSerializers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
-using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     internal class PlayerHeroDeveloperSerializer : CustomSerializer

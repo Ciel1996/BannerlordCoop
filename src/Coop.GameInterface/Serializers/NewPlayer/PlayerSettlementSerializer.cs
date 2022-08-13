@@ -1,8 +1,7 @@
 ﻿using System;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     internal class PlayerSettlementSerializer : CustomSerializer

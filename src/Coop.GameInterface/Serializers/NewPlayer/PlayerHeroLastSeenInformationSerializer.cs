@@ -1,20 +1,21 @@
 ﻿using System;
+using Coop.GameInterface.Serializers.CustomSerializers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     internal class PlayerHeroLastSeenInformationSerializer : ICustomSerializer
     {
         private PlayerSettlementSerializer lastSeenPlace;
-        private Custom.CampaignTimeSerializer lastSeenDate;
+        private CampaignTimeSerializer lastSeenDate;
         private bool isSettlementNearby;
 
         public PlayerHeroLastSeenInformationSerializer(Hero.HeroLastSeenInformation heroLastSeenInformation)
         {
             lastSeenPlace = new PlayerSettlementSerializer(heroLastSeenInformation.LastSeenPlace);
-            lastSeenDate = new Custom.CampaignTimeSerializer(heroLastSeenInformation.LastSeenDate);
+            lastSeenDate = new CampaignTimeSerializer(heroLastSeenInformation.LastSeenDate);
             isSettlementNearby = heroLastSeenInformation.IsNearbySettlement;
         }
 

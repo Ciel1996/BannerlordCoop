@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Reflection;
+using Coop.GameInterface.Serializers.PropertyOwnerSerializers;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class MBCharacterSkillsSerializer : ICustomSerializer

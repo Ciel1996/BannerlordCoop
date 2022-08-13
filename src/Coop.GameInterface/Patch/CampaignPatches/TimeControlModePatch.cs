@@ -1,8 +1,7 @@
-﻿using Coop.Mod.Patch.World;
-using HarmonyLib;
+﻿using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 
-namespace Coop.Mod.Patch.CampaignPatches
+namespace Coop.GameInterface.Patch.CampaignPatches
 {
 
     /// <summary>

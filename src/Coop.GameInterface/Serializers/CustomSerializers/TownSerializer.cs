@@ -1,21 +1,19 @@
-﻿using Common;
-using SandBox;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Coop.GameInterface.Serializers;
+using Common;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.Core;
-using TaleWorlds.Localization;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
-using static TaleWorlds.CampaignSystem.Settlements.Town;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Settlements.Buildings;
 using TaleWorlds.CampaignSystem.Settlements.Workshops;
+using TaleWorlds.Core;
+using TaleWorlds.Localization;
+using static TaleWorlds.CampaignSystem.Settlements.Town;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class TownSerializer : CustomSerializerWithGuid

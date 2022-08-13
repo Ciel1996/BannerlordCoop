@@ -1,7 +1,7 @@
 ﻿using System;
 using TaleWorlds.Library;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class PathFaceRecordSerializer : ICustomSerializer

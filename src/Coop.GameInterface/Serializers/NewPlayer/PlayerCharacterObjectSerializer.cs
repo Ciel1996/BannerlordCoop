@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
 using System.Reflection;
-using System.Xml;
-using TaleWorlds.Core;
-using System.IO;
-using System.Collections;
-using TaleWorlds.ObjectSystem;
 using System.Runtime.Serialization;
-using TaleWorlds.Localization;
 using Common;
-using Coop.GameInterface.Serializers;
+using Coop.GameInterface.Serializers.CustomSerializers;
+using Coop.GameInterface.Serializers.PropertyOwnerSerializers;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.Core;
+using TaleWorlds.Localization;
+using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     public class PlayerCharacterObjectSerializer : CustomSerializer
@@ -81,11 +76,11 @@ namespace Coop.Mod.Serializers
                         break;
 
                     case "CharacterSkills":
-                        SNNSO.Add(fieldInfo, new Custom.MBCharacterSkillsSerializer((MBCharacterSkills)value));
+                        SNNSO.Add(fieldInfo, new MBCharacterSkillsSerializer((MBCharacterSkills)value));
                         break;
 
                     case "_persona":
-                        SNNSO.Add(fieldInfo, new Custom.TraitObjectSerializer((TraitObject)value));
+                        SNNSO.Add(fieldInfo, new TraitObjectSerializer((TraitObject)value));
                         break;
 
                     default:

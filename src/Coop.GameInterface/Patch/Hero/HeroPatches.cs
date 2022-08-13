@@ -1,21 +1,16 @@
 ﻿using HarmonyLib;
-using TaleWorlds.CampaignSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NLog;
 
-namespace Coop.Mod.Patch
+namespace Coop.GameInterface.Patch.Hero
 {
-    [HarmonyPatch(typeof(Hero))]
+    [HarmonyPatch(typeof(TaleWorlds.CampaignSystem.Hero))]
     internal class HeroPatches
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         [HarmonyPostfix]
         [HarmonyPatch(MethodType.Constructor)]
-        static void Postfix(Hero __instance)
+        static void Postfix(TaleWorlds.CampaignSystem.Hero __instance)
         {
             
             //if(Coop.Core.IsServer)

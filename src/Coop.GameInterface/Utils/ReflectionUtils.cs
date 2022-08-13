@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Coop.Mod.Patch;
+using Coop.GameInterface.Patch;
 using HarmonyLib;
 
 namespace Coop.GameInterface.Utils

@@ -1,8 +1,7 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using TaleWorlds.CampaignSystem;
+using Common;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -10,7 +9,7 @@ using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 using static TaleWorlds.CampaignSystem.Settlements.Village;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class VillageSerializer : CustomSerializerWithGuid

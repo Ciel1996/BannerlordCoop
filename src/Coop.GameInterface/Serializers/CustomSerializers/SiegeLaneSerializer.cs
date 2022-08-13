@@ -1,7 +1,4 @@
-﻿using System;
-using static TaleWorlds.CampaignSystem.Settlements.Settlement;
-
-namespace Coop.Mod.Serializers.Custom
+﻿namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     //[Serializable]
     //public class SiegeLaneSerializer : ICustomSerializer

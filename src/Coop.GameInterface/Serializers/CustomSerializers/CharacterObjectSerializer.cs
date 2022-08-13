@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using TaleWorlds.CampaignSystem;
 using System.Reflection;
-using TaleWorlds.Core;
-using TaleWorlds.ObjectSystem;
-using TaleWorlds.Localization;
 using Common;
-using Coop.GameInterface.Serializers;
+using Coop.GameInterface.Serializers.PropertyOwnerSerializers;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.Core;
+using TaleWorlds.Localization;
+using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class CharacterObjectSerializer : CustomSerializerWithGuid

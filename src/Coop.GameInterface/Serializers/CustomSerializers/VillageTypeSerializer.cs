@@ -1,15 +1,13 @@
 ﻿using System;
-using TaleWorlds.ObjectSystem;
-using TaleWorlds.CampaignSystem;
-using System.Reflection;
 using System.Collections.Generic;
-using TaleWorlds.Core;
 using System.Linq;
-using Coop.GameInterface.Serializers;
-using TaleWorlds.Localization;
+using System.Reflection;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
+using TaleWorlds.Localization;
+using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class VillageTypeSerializer : CustomSerializer

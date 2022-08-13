@@ -1,15 +1,14 @@
-﻿using SandBox.View.Map;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Coop.GameInterface.Serializers.CustomSerializers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
-using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     public class PlayerPartyBaseSerializer : CustomSerializer
@@ -54,15 +53,15 @@ namespace Coop.Mod.Serializers
                         break;
                     case "<ItemRoster>k__BackingField":
                         // ItemRoster
-                        SNNSO.Add(fieldInfo, new Custom.ItemRosterSerializer((ItemRoster)value));
+                        SNNSO.Add(fieldInfo, new ItemRosterSerializer((ItemRoster)value));
                         break;
                     case "Random":
                         // DeterministicRandom
-                        SNNSO.Add(fieldInfo, new Custom.DeterministicRandomSerializer((DeterministicRandom)value));
+                        SNNSO.Add(fieldInfo, new DeterministicRandomSerializer((DeterministicRandom)value));
                         break;
                     case "_lastEatingTime":
                         //CampaignTime
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     case "_owner":
                         // Not needed, populated at deserialize

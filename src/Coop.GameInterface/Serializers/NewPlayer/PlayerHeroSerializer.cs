@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Coop.GameInterface.Serializers;
+using Coop.GameInterface.Serializers.CustomSerializers;
+using Coop.GameInterface.Serializers.PropertyOwnerSerializers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Party;
@@ -9,9 +10,8 @@ using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
-using Debug = System.Diagnostics.Debug;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     public class PlayerHeroSerializer : CustomSerializer
@@ -65,13 +65,13 @@ namespace Coop.Mod.Serializers
                         SNNSO.Add(fieldInfo, new PlayerCharacterObjectSerializer((CharacterObject)value));
                         break;
                     case "<BattleEquipment>k__BackingField":
-                        SNNSO.Add(fieldInfo, new Custom.EquipmentSerializer((Equipment)value));
+                        SNNSO.Add(fieldInfo, new EquipmentSerializer((Equipment)value));
                         break;
                     case "<CivilianEquipment>k__BackingField":
-                        SNNSO.Add(fieldInfo, new Custom.EquipmentSerializer((Equipment)value));
+                        SNNSO.Add(fieldInfo, new EquipmentSerializer((Equipment)value));
                         break;
                     case "<CaptivityStartTime>k__BackingField":
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     case "_heroTraits":
                         SNNSO.Add(fieldInfo, new CharacterTraitsSerializer((CharacterTraits)value));
@@ -89,13 +89,13 @@ namespace Coop.Mod.Serializers
                         SNNSO.Add(fieldInfo, new PlayerHeroLastSeenInformationSerializer((Hero.HeroLastSeenInformation)value));
                         break;
                     case "_birthDay":
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     case "_deathDay":
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     case "<LastCommentTime>k__BackingField":
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     case "_clan":
                         SNNSO.Add(fieldInfo, new PlayerClanSerializer((Clan)value));
@@ -108,7 +108,7 @@ namespace Coop.Mod.Serializers
                         SNNSO.Add(fieldInfo, new PlayerMobilePartySerializer((MobileParty)value));
                         break;
                     case "<LastMeetingTimeWithPlayer>k__BackingField":
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     case "_bornSettlement":
                         SNNSO.Add(fieldInfo, new PlayerSettlementSerializer((Settlement)value));

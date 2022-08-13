@@ -1,14 +1,12 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Coop.GameInterface.Serializers;
+using Common;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Election;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class KingdomSerializer : CustomSerializerWithGuid

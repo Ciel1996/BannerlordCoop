@@ -6,7 +6,6 @@ using Coop.Core.Configuration;
 using Coop.Core.Debugging.Logger;
 using Coop.Core.Server.Connections;
 using Coop.GameInterface.Serialization;
-using Coop.Serialization;
 using LiteNetLib;
 
 namespace Coop.Core

@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Coop.Mod.Serializers;
 using NLog;
 using TaleWorlds.Localization;
 

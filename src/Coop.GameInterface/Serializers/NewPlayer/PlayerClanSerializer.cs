@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using Coop.GameInterface.Serializers;
+using Coop.GameInterface.Serializers.CustomSerializers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.ObjectSystem;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     class PlayerClanSerializer : CustomSerializer
@@ -65,7 +61,7 @@ namespace Coop.Mod.Serializers
                         SNNSO.Add(fieldInfo, new PlayerCultureObjectSerializer((CultureObject)value));
                         break;
                     case "<LastFactionChangeTime>k__BackingField":
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     case "<SupporterNotables>k__BackingField":
                         foreach (Hero hero in (MBReadOnlyList<Hero>)value)
@@ -92,16 +88,16 @@ namespace Coop.Mod.Serializers
                         // Assigned by SetHeroReference on deserialization
                         break;
                     case "_banner":
-                        SNNSO.Add(fieldInfo, new Custom.BannerSerializer((Banner)value));
+                        SNNSO.Add(fieldInfo, new BannerSerializer((Banner)value));
                         break;
                     case "_home":
                         SNNSO.Add(fieldInfo, new PlayerSettlementSerializer((Settlement)value));
                         break;
                     case "<NotAttackableByPlayerUntilTime>k__BackingField":
-                        SNNSO.Add(fieldInfo, new Custom.CampaignTimeSerializer((CampaignTime)value));
+                        SNNSO.Add(fieldInfo, new CampaignTimeSerializer((CampaignTime)value));
                         break;
                     case "_defaultPartyTemplate":
-                        SNNSO.Add(fieldInfo, new Custom.DefaultPartyTemplateSerializer((PartyTemplateObject)value));
+                        SNNSO.Add(fieldInfo, new DefaultPartyTemplateSerializer((PartyTemplateObject)value));
                         break;
                     case "<Fiefs>k__BackingField":
                     case "_villagesReadOnlyCache":

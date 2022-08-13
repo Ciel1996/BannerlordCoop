@@ -1,12 +1,12 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Common;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements.Buildings;
 using TaleWorlds.Core;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class BuildingsSerializer : CustomSerializerWithGuid

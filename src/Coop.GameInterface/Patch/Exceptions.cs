@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Coop.Mod.Patch
+namespace Coop.GameInterface.Patch
 {
     public class MethodNotFoundException : Exception
     {

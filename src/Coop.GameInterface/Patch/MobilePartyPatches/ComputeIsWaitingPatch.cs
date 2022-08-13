@@ -1,13 +1,7 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 
-namespace Coop.Mod.Patch.MobilePartyPatches
+namespace Coop.GameInterface.Patch.MobilePartyPatches
 {
     /// <summary>
     ///     Patch that alter <see cref="TaleWorlds.CampaignSystem.MobileParty.ComputeIsWaiting"/> method so that the player's party is never waiting.

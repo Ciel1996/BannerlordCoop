@@ -2,7 +2,7 @@
 using System.Reflection;
 using TaleWorlds.Core;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class DeterministicRandomSerializer : CustomSerializer

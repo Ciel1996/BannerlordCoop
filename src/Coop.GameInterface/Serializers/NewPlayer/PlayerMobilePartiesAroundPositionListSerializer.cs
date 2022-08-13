@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.NewPlayer
 {
     [Serializable]
     public class PlayerMobilePartiesAroundPositionListSerializer : ICustomSerializer

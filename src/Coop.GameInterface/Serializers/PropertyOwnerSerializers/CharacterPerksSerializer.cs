@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Xml;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.PropertyOwnerSerializers
 {
     [Serializable]
     public class CharacterPerksSerializer : PropertyOwnerSerializer<PerkObject>

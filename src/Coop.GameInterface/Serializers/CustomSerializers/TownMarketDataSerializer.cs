@@ -1,13 +1,12 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using TaleWorlds.CampaignSystem;
+using Common;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 
-namespace Coop.Mod.Serializers.Custom
+namespace Coop.GameInterface.Serializers.CustomSerializers
 {
     [Serializable]
     public class TownMarketDataSerializer : CustomSerializer

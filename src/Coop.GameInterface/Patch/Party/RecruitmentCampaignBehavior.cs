@@ -1,10 +1,9 @@
 ﻿using HarmonyLib;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace Coop.Mod.Patch.Party
+namespace Coop.GameInterface.Patch.Party
 {
     [HarmonyPatch(typeof(RecruitmentCampaignBehavior), "CheckRecruiting")]
     internal class RecruitmentCampaignBehaviorPatch

@@ -1,8 +1,8 @@
-﻿using Coop.Mod.Patch.World;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Coop.GameInterface.Patch.World;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Library;

@@ -2,7 +2,7 @@
 using System.Xml;
 using TaleWorlds.Core;
 
-namespace Coop.Mod.Serializers
+namespace Coop.GameInterface.Serializers.PropertyOwnerSerializers
 {
     [Serializable]
     public class CharacterSkillsSerializer : PropertyOwnerSerializer<SkillObject>
